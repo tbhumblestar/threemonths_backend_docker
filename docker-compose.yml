@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  webserver:
+    image: nginx:1.23.1-alpine
+    container_name: proxy 
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./myweb:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot-etc:/etc/letsencrypt
+    
+
+  django:
+    build:
+      context: ./django
+      dockerfile: Dockerfile
+    container_name: django
+    restart: always
+
+  nginx:
+    image: nginx:1.23.1
+    container_name: myweb
+    restart: always
+    volumes:
+      - ./myweb:/usr/share/nginx/html
+
+  certbot:
+    depends_on:
+      - webserver
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot-etc:/etc/letsencrypt
+      - ./myweb:/usr/share/nginx/html
+    
+    #첫발급
+    #command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d threemonths.shop -d www.threemonths.shop
+    
+    #첫발급 테스트(--dry-run 추가)
+    #command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d threemonths.shop -d www.threemonths.shop
+
+    #재발급테스트(--keep-until-expiring 삭제, --force-renewal 추가)
+    #command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d threemonths.shop -d www.threemonths.shop --force-renewal
+
+    #재발급테스트(--dry-run 추가)
+    command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d threemonths.shop -d www.threemonths.shop --force-renewal
