@@ -20,6 +20,8 @@ services:
       dockerfile: Dockerfile
     container_name: django
     restart: always
+    # volumes:
+    #   - ./django:/home/threemonths
 
   nginx:
     image: nginx:1.23.1
