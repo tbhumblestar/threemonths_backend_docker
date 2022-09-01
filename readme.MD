@@ -5,23 +5,23 @@
 ## 구성
     - proxy 컨테이너 : nginxproxy컨테이너
     - django 컨테이너 : 장고서버
-    - certbot 컨테이너 : SSL 인증서 발급 등 https 지원을 위함
+    - certbot 컨테이너 : https 프로토콜을 위한 인증서 발급
 
 ## 필요한 파일과 경로
     - .env파일을 docker-compose파일과 동일한 경로에 둘 것 : docker-compose에 적용할 환경변수를 위함
     - git_access_token_env.sh을 docker-compose파일과 동일한 경로에 둘 것 : build과정에서 dockerfile에 적용할 환경변수를 위함
     - secret_settings.py을 django폴더 내부에 저장
 
-## 명령어
+## git clone 후 실행 명령어
     - source git_access_token_env.sh : dockerfile을 위한 환경변수 등록
     - docker-compose build --build-arg GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN && docker-compose up -d : 이미지 빌드 & 구동
 
-# 
 
 ## 특이사항
 ### SSL인증서 첫발급
     - docker-compose certbot컨테이너의 command 부분에서 첫발급 부분 활성화(dry-run으로 꼭 테스트 해보고나서 실행할 것!!)
     - nginx/nginx.conf에서 ssl관련 server부분 비활성화 > 성공적으로 인증서를 발급받았을 경우 다시 활성화할 것!
+    - Domain Check!
 
 ### SSL인증서 발급 후 정상작동시
     - docker-compose certbot컨테이너의 command 부분에서 재발급 부분 활성화(역시 dry-run으로 꼭 테스트 해보고나서 실행할 것!!)
