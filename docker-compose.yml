@@ -23,12 +23,12 @@ services:
     # volumes:
     #   - ./django:/home/threemonths
 
-  nginx:
-    image: nginx:1.23.1
-    container_name: myweb
-    restart: always
-    volumes:
-      - ./myweb:/usr/share/nginx/html
+  # nginx:
+  #   image: nginx:1.23.1
+  #   container_name: myweb
+  #   restart: always
+  #   volumes:
+  #     - ./myweb:/usr/share/nginx/html
 
   certbot:
     depends_on:
@@ -40,10 +40,10 @@ services:
       - ./myweb:/usr/share/nginx/html
     
     #첫발급
-    #command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
     
     #첫발급 테스트(--dry-run 추가)
-    command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
+    # command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
 
     #재발급테스트(--keep-until-expiring 삭제, --force-renewal 추가)
     #command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${Domain} -d www.${Domain} --force-renewal
