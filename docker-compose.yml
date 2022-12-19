@@ -18,10 +18,12 @@ services:
 
   django:
     build:
-      context: ./django
+      context: ./django #dockerfile경로
       dockerfile: Dockerfile
     container_name: django
     restart: always
+    environment:
+      - server_environment=${server_environment}
     command: >
       sh -c "python manage.py migrate &&
             gunicorn --bind 0.0.0.0:8000 threemonths.wsgi:application"
@@ -46,13 +48,13 @@ services:
       - ./myweb:/usr/share/nginx/html
     
     #첫발급
-    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
+    # command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
     
     #첫발급 테스트(--dry-run 추가)
     # command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
 
     #재발급(--keep-until-expiring 삭제, --force-renewal 추가)
-    #command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${Domain} -d www.${Domain} --force-renewal
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${Domain} -d www.${Domain} --force-renewal
 
     #재발급테스트(--dry-run 추가)
     # command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${Domain} -d www.${Domain} --force-renewal
