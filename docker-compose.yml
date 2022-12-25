@@ -22,11 +22,12 @@ services:
       dockerfile: Dockerfile
     container_name: django
     restart: always
-    environment:
-      - server_environment=${server_environment}
     command: >
       sh -c "python manage.py migrate &&
             gunicorn --bind 0.0.0.0:8000 threemonths.wsgi:application"
+    environment:
+      - server_environment=${server_environment}
+    
 
     # volumes:
     #   - ./django:/home/threemonths
