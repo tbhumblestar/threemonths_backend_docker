@@ -1,6 +1,6 @@
 server {
         listen 80;
-        server_name threemonth.shop www.threemonth.shop;
+        server_name ${domain} www.${domain};
 
         location ~ /.well-known/acme-challenge {
                 allow all;
@@ -16,10 +16,10 @@ server {
     # 인증서 첫 발급시 아래 server부분을 주석처리하고 docker-compose를 실행. 인증서 발급 이후로는 다시 살려둘 것
     server {
         listen 443 ssl;
-        server_name threemonth.shop www.threemonth.shop;
+        server_name ${domain} www.${domain};
         
-        ssl_certificate /etc/letsencrypt/live/threemonth.shop/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/threemonth.shop/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/${domain}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/${domain}/privkey.pem;
         include /etc/letsencrypt/options-ssl-nginx.conf; # 보안 강화를 위한 옵션 추가
         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;   # 보안 강화를 위한 옵션 추가
 
