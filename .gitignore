@@ -406,3 +406,4 @@ git_access_token_env.sh
 /certbot-etc/*
 !/certbot-etc/options-ssl-nginx.conf
 !/certbot-etc/ssl-dhparams.pem
+restart.sh

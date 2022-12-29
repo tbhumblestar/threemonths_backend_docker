@@ -3,6 +3,7 @@ version: "3"
 services:
   webserver:
     image: nginx:1.23.1-alpine
+    user: root
     container_name: proxy 
     restart: always
     ports:
@@ -11,7 +12,10 @@ services:
     volumes:
       - ./myweb:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/templates/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
       - ./certbot-etc:/etc/letsencrypt
+    environment:
+      - domain=${domain}
     
 
 #CMD ["gunicorn", "--bind","0.0.0.0:8000", "threemonths.wsgi:application"]
@@ -29,16 +33,6 @@ services:
       - server_environment=${server_environment}
     
 
-    # volumes:
-    #   - ./django:/home/threemonths
-
-  # nginx:
-  #   image: nginx:1.23.1
-  #   container_name: myweb
-  #   restart: always
-  #   volumes:
-  #     - ./myweb:/usr/share/nginx/html
-
   certbot:
     depends_on:
       - webserver
@@ -49,13 +43,13 @@ services:
       - ./myweb:/usr/share/nginx/html
     
     #첫발급
-    # command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
+    # command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${domain} -d www.${domain}
     
     #첫발급 테스트(--dry-run 추가)
-    # command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${Domain} -d www.${Domain}
+    # command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${domain} -d www.${domain}
 
     #재발급(--keep-until-expiring 삭제, --force-renewal 추가)
-    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${Domain} -d www.${Domain} --force-renewal
+    # command: certonly --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${domain} -d www.${domain} --force-renewal
 
     #재발급테스트(--dry-run 추가)
-    # command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${Domain} -d www.${Domain} --force-renewal
+    command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${domain} -d www.${domain} --force-renewal
