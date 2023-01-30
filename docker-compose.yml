@@ -24,6 +24,8 @@ services:
     build:
       context: ./django #dockerfile경로
       dockerfile: Dockerfile
+    depends_on:
+      - redis
     container_name: django
     restart: always
     command: >
@@ -53,3 +55,10 @@ services:
 
     #재발급테스트(--dry-run 추가)
     command: certonly --dry-run --webroot --webroot-path=/usr/share/nginx/html --email colock123@gmail.com --agree-tos --no-eff-email -d ${domain} -d www.${domain} --force-renewal
+ 
+  redis:
+    image: redis:alpine
+    container_name: cache-redis
+    restart: always
+    ports:
+      - "6379:6379"
